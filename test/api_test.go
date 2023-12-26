@@ -3,21 +3,20 @@ package test
 import (
 	"context"
 	"encoding/json"
+	"github.com/nobody05/dify-sdk-go"
 	"log"
 	"strings"
 	"testing"
-
-	"github.com/zhouyangtingwen/dify-sdk-go"
 )
 
 var (
-	host = "这里填写你的host"
+	host         = "这里填写你的host"
 	apiSecretKey = "这里填写你的api secret key"
 )
 
 func TestApi3(t *testing.T) {
 	var c = &dify.ClientConfig{
-		Host: host,
+		Host:         host,
 		ApiSecretKey: apiSecretKey,
 	}
 	var client1 = dify.NewClientWithConfig(c)
@@ -30,13 +29,13 @@ func TestApi3(t *testing.T) {
 	var ctx, _ = context.WithCancel(context.Background())
 
 	var (
-		ch = make(chan dify.ChatMessageStreamChannelResponse)
+		ch  = make(chan dify.ChatMessageStreamChannelResponse)
 		err error
 	)
 
 	ch, err = client1.Api().ChatMessagesStream(ctx, &dify.ChatMessageRequest{
 		Query: "你是谁?",
-		User: "这里换成你创建的",
+		User:  "这里换成你创建的",
 	})
 	if err != nil {
 		t.Fatal(err.Error())
@@ -44,7 +43,7 @@ func TestApi3(t *testing.T) {
 
 	var (
 		strBuilder strings.Builder
-		cId string
+		cId        string
 	)
 	for {
 		select {
@@ -61,7 +60,7 @@ func TestApi3(t *testing.T) {
 		}
 	}
 
-	M:
+M:
 	t.Log(strBuilder.String())
 	t.Log(cId)
 }
@@ -74,7 +73,7 @@ func TestMessages(t *testing.T) {
 	// messages
 	var messageReq = &dify.MessagesRequest{
 		ConversationID: cId,
-		User: "jiuquan AI",
+		User:           "jiuquan AI",
 	}
 
 	var client = dify.NewClient(host, apiSecretKey)
@@ -98,8 +97,8 @@ func TestMessagesFeedbacks(t *testing.T) {
 	var res *dify.MessagesFeedbacksResponse
 	if res, err = client.Api().MessagesFeedbacks(ctx, &dify.MessagesFeedbacksRequest{
 		MessageID: id,
-		Rating: dify.FeedbackLike,
-		User: "jiuquan AI",
+		Rating:    dify.FeedbackLike,
+		User:      "jiuquan AI",
 	}); err != nil {
 		t.Fatal(err.Error())
 	}
@@ -134,8 +133,8 @@ func TestConversationsRename(t *testing.T) {
 	var res *dify.ConversationsRenamingResponse
 	if res, err = client.Api().ConversationsRenaming(ctx, &dify.ConversationsRenamingRequest{
 		ConversationID: "ec373942-2d17-4f11-89bb-f9bbf863ebcc",
-		Name: "rename!!!",
-		User: "jiuquan AI",
+		Name:           "rename!!!",
+		User:           "jiuquan AI",
 	}); err != nil {
 		t.Fatal(err.Error())
 	}
