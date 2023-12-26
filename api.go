@@ -257,6 +257,22 @@ func (api *Api) CompletionMessagesStreamRaw(ctx context.Context, req *Completion
 	return api.c.SetHttpRequest(r).SendRequestStream()
 }
 
+func (api *Api) CompletionMessagesStream(ctx context.Context, req *CompletionMessageRequest) (streamChannel chan ChatMessageStreamChannelResponse, err error) {
+	if req == nil {
+		err = errors.New("ChatMessagesStream.ChatMessageRequest Illegal")
+		return
+	}
+
+	var resp *http.Response
+	if resp, err = api.CompletionMessagesStreamRaw(ctx, req); err != nil {
+		return
+	}
+
+	streamChannel = make(chan ChatMessageStreamChannelResponse)
+	go api.chatMessagesStreamHandle(ctx, resp, streamChannel)
+	return
+}
+
 /* Create chat message
  * Create a new conversation message or continue an existing dialogue.
  */
